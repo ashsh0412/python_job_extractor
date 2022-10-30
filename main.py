@@ -1,7 +1,8 @@
 from unicodedata import name
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,redirect,send_file
 from extractor.indeed import extract_job
 from extractor.wwr import wwr_job_scrapper
+from file import save_to_file
 
 app = Flask("JobScrapper")
 
@@ -14,6 +15,8 @@ def home():
 @app.route("/search")
 def hello():
     keyword = request.args.get("keyword")
+    if keyword == None:
+        return redirect("/")
     if keyword in db:
         jobs = db[keyword]
     else:
@@ -23,5 +26,15 @@ def hello():
         db[keyword] = jobs
     return render_template("search.html", keyword=keyword, jobs=jobs)
 
+
+@app.route("/export")
+def export():
+    keyword = request.args.get("keyword")
+    if keyword == None:
+        return redirect("/")
+    if keyword not in db:
+        return redirect(f"/search?keyword{keyword}")
+    save_to_file(keyword, db[keyword])
+    return send_file(f"{keyword}.csv", as_attachment=True)
 
 app.run()

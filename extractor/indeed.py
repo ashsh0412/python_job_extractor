@@ -57,7 +57,7 @@ def extract_job(name):
                 job_data = {
                     'link' : f'https://kr.indeed.com{link}',
                     'company' : company.string.replace(',', ' '),
-                    'location' : location.string,
+                    'location' : location.string.replace(","," "),
                     'position' : string_title
                 }
                 results.append(job_data)
