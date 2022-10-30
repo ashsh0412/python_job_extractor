@@ -3,7 +3,7 @@ def save_to_file(file_name, jobs):
     for job in jobs:
         file.write("Position, Company, Location, URL\n")
         file.write(f"{job['position']},{job['company']},{job['location']},{job['link']}\n")
-    file.close()    
+    file.close()  
 
 
 #

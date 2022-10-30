@@ -33,7 +33,7 @@ def export():
     if keyword == None:
         return redirect("/")
     if keyword not in db:
-        return redirect(f"/search?keyword{keyword}")
+        return redirect(f"/search?keyword={keyword}")
     save_to_file(keyword, db[keyword])
     return send_file(f"{keyword}.csv", as_attachment=True)
 
