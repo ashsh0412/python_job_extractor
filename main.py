@@ -1,21 +1,27 @@
-import imp
-from tkinter.messagebox import NO
+from unicodedata import name
+from flask import Flask,render_template,request
 from extractor.indeed import extract_job
 from extractor.wwr import wwr_job_scrapper
 
-keyword = input("WHAY DO YOU WANT TO SEARCH?")
+app = Flask("JobScrapper")
 
-indeed = extract_job(keyword)
-wwr = wwr_job_scrapper(keyword)
+db = {}
 
-jobs = indeed + wwr
+@app.route("/")
+def home():
+    return render_template("home.html", name="sungho")
 
-file = open(f"{keyword}.csv", "w", encoding="utf-8")
-for job in jobs:
-    file.write("Position, Company, Location, URL\n")
-    file.write(f"{job['position']},{job['company']},{job['location']},{job['link']}\n")
-file.close()    
+@app.route("/search")
+def hello():
+    keyword = request.args.get("keyword")
+    if keyword in db:
+        jobs = db[keyword]
+    else:
+        indeed = extract_job(keyword)
+        wwr = wwr_job_scrapper(keyword)
+        jobs = indeed + wwr
+        db[keyword] = jobs
+    return render_template("search.html", keyword=keyword, jobs=jobs)
 
 
-
-
+app.run()
