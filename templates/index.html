@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+  <title>Job Scrapper</title>
+  <link href="{{url_for('static',filename='style.css')}}" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+	  <a href="#" role="button" class="outline" id="darkmode">LIGHT MODE</a>
+    </div>
+    <h1>Job Scrapper</h1>
+    <form action="/search">
+      <input autocomplete="off" placeholder="Write Keyword Please" name="keyword"/>
+      <button>SEARCH</button>
+    </form>
+  </main>
+  <script src="{{url_for('static',filename='index.js')}}"></script>
+</body>
+</html>

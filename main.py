@@ -1,40 +1,39 @@
-from unicodedata import name
-from flask import Flask,render_template,request,redirect,send_file
-from extractor.indeed import extract_job
-from extractor.wwr import wwr_job_scrapper
+from flask import Flask, render_template,request, redirect,send_file
+from remoteok import extract_jobs
+from weworkremotely import wework_scrapper
 from file import save_to_file
 
-app = Flask("JobScrapper")
+app = Flask("Jobscarpper")
 
 db = {}
 
 @app.route("/")
 def home():
-    return render_template("home.html", name="sungho")
+  return render_template("index.html",)
 
 @app.route("/search")
-def hello():
-    keyword = request.args.get("keyword")
-    if keyword == None:
-        return redirect("/")
-    if keyword in db:
-        jobs = db[keyword]
-    else:
-        indeed = extract_job(keyword)
-        wwr = wwr_job_scrapper(keyword)
-        jobs = indeed + wwr
-        db[keyword] = jobs
-    return render_template("search.html", keyword=keyword, jobs=jobs)
+def search():
+  keyword = request.args.get("keyword")
+  if keyword == None:
+    return redirect("/")
+  if keyword in db:
+    jobs = db[keyword]
+  else:
+    result1 = extract_jobs(keyword)
+    result2 = wework_scrapper(keyword)
+    jobs = result1 + result2
+    db[keyword] = jobs
+  return render_template("search.html", keyword = keyword, jobs = jobs)
 
 
 @app.route("/export")
 def export():
-    keyword = request.args.get("keyword")
-    if keyword == None:
-        return redirect("/")
-    if keyword not in db:
-        return redirect(f"/search?keyword={keyword}")
-    save_to_file(keyword, db[keyword])
-    return send_file(f"{keyword}.csv", as_attachment=True)
+  keyword = request.args.get("keyword")
+  if keyword == None:
+    return redirect("/")
+  if keyword not in db:
+    return redirect(f"/search?keyword={keyword}")
+  save_to_file(keyword, db[keyword])
+  return send_file(f"{keyword}.csv", as_attachment=True)
 
-app.run()
+app.run("0.0.0.0")

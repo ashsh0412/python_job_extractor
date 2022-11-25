@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Job Scrapper</title>
     <link
       rel="stylesheet"
       href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
     />
+    <title>Job Scrapper</title>
+    <link href="{{url_for('static',filename='style.css')}}" rel="stylesheet" />
   </head>
   <body>
     <main class="container">
-      <hgroup>
-        <h1>JOB RESULTS FOR "{{keyword}}"</h1>
-        <a target="_blank" href="/export?keyword={{keyword}}">Export to file</a>
-      </hgroup>
+      <a href="#" role="button" class="outline" id="darkmode">LIGHT MODE</a>
       <table role="grid">
         <thead>
           <tr>
@@ -26,18 +24,23 @@
           </tr>
         </thead>
         <tbody>
-          {%for job in jobs%}
+          <h1>We searched for {{keyword}}:</h1>
+          <hgroup>
+            <a target="_blank" href="/export?keyword={{keyword}}"
+              >EXPORT TO FILE</a
+            >
+          </hgroup>
+          {% for job in jobs %}
           <tr>
-            <td>{{job.position}}</td>
+            <td>{{job.title}}</td>
             <td>{{job.company}}</td>
             <td>{{job.location}}</td>
-            <td>
-              <a href="{{job.link}}" target="_blank">APPLY NOW</a>
-            </td>
+            <td><a href="{{job.link}}" target="_blank">Apply &rarr;</a></td>
           </tr>
-          {%endfor%}
+          {% endfor %}
         </tbody>
       </table>
     </main>
+    <script src="{{url_for('static',filename='index.js')}}"></script>
   </body>
 </html>
